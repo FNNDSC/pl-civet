@@ -24,7 +24,25 @@
 
 
 FROM fnndsc/ubuntu-python3:latest
-MAINTAINER fnndsc "dev@babymri.org"
+
+
+# install CIVET-2.1.1 binaries
+RUN ["mkdir", "-p", "/opt/CIVET/Linux-x86_64"]
+COPY --from=mcin/civet:2.1.1 /opt/CIVET/Linux-x86_64/ /opt/CIVET/Linux-x86_64/
+
+# init.sh environment variables, should be equivalent to
+# printf "%s\n\n" "source /opt/CIVET/Linux-x86_64/init.sh" >> ~/.bashrc
+ENV MNIBASEPATH=/opt/CIVET/Linux-x86_64 CIVET=CIVET-2.1.1
+ENV PATH=$MNIBASEPATH/$CIVET:$MNIBASEPATH/$CIVET/progs:$MNIBASEPATH/bin:$PATH \
+    LD_LIBRARY_PATH=$MNIBASEPATH/lib \
+    MNI_DATAPATH=$MNIBASEPATH/share \
+    PERL5LIB=$MNIBASEPATH/perl \
+    R_LIBS=$MNIBASEPATH/R_LIBS \
+    VOLUME_CACHE_THRESHOLD=-1 \
+    BRAINVIEW=$MNIBASEPATH/share/brain-view \
+    MINC_FORCE_V2=1 \
+    MINC_COMPRESS=4 \
+    CIVET_JOB_SCHEDULER=DEFAULT
 
 ENV APPROOT="/usr/src/civet_wrapper"
 COPY ["civet_wrapper", "${APPROOT}"]
