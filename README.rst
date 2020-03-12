@@ -29,6 +29,7 @@ Synopsis
         [--version]                                                 \
         [--man]                                                     \
         [--meta]                                                    \
+        --args <CLI_ARGS>                                           \
         <inputDir>
         <outputDir> 
 
@@ -54,6 +55,8 @@ Agruments
     [--meta]
     If specified, print plugin meta data.
 
+    --args <CLI_ARGS>
+    CLI arguments to pass to CIVET_Processing_Pipeline
 
 Run
 ----
@@ -106,6 +109,17 @@ Thus, getting inline help is:
 
 Examples
 --------
+
+.. code:: bash
+
+    python civet_wrapper.py --args "-N3-distance 200 -lsq12 -resample-surfaces -thickness tlaplace:tfs:tlink 30:20 -VBM -combine-surface -spawn -run 00100" source/  output/
+
+Development
+-----------
+
+.. code:: bash
+
+    docker build -t pl-civet --build-arg http_proxy=http://proxy.tch.harvard.edu:3128 $PWD
 
 
 

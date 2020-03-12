@@ -19,10 +19,13 @@ from chrisapp.base import ChrisApp
 
 
 Gstr_title = """
-
-Generate a title from 
-http://patorjk.com/software/taag/#p=display&f=Doom&t=civet_wrapper
-
+ _____ _____ _   _ _____ _____ 
+/  __ \_   _| | | |  ___|_   _|
+| /  \/ | | | | | | |__   | |  
+| |     | | | | | |  __|  | |  
+| \__/\_| |_\ \_/ / |___  | |  
+ \____/\___/ \___/\____/  \_/  
+                               
 """
 
 Gstr_synopsis = """
@@ -46,6 +49,7 @@ where necessary.)
             [--meta]                                                    \\
             [--savejson <DIR>]                                          \\
             [-v <level>] [--verbosity <level>]                          \\
+            --args <CLI_ARGS>                                           \\
             [--version]                                                 \\
             <inputDir>                                                  \\
             <outputDir> 
@@ -53,10 +57,10 @@ where necessary.)
     BRIEF EXAMPLE
 
         * Bare bones execution
-
-            mkdir in out && chmod 777 out
-            python civet_wrapper.py   \\
-                                in    out
+        
+            mkdir input
+            cp t1.mnc input/00100_t1.mnc
+            python civet_wrapper.py --args "-N3-distance 200 -lsq12 -resample-surfaces -thickness tlaplace:tfs:tlink 30:20 -VBM -combine-surface -spawn -run 00100" source/  output/
 
     DESCRIPTION
 
@@ -87,6 +91,7 @@ where necessary.)
 
 """
 
+script = '/opt/CIVET/Linux-x86_64/CIVET-2.1.1/CIVET_Processing_Pipeline'
 
 class Civet(ChrisApp):
     """
@@ -103,7 +108,7 @@ class Civet(ChrisApp):
     DOCUMENTATION           = 'http://www.bic.mni.mcgill.ca/ServicesSoftware/CIVET-2-1-0-Table-of-Contents'
     VERSION                 = '2.1.1'
     ICON                    = '' # url of an icon image
-    LICENSE                 = 'Opensource (MIT)'
+    LICENSE                 = 'Civet core'
     MAX_NUMBER_OF_WORKERS   = 1  # Override with integer value
     MIN_NUMBER_OF_WORKERS   = 1  # Override with integer value
     MAX_CPU_LIMIT           = '' # Override with millicore value as string, e.g. '2000m'
@@ -131,6 +136,12 @@ class Civet(ChrisApp):
         Define the CLI arguments accepted by this plugin app.
         Use self.add_argument to specify a new app argument.
         """
+        self.add_argument('--args',
+                   dest         = 'cli_args',
+                   type         = str,
+                   optional     = False,
+                   help         = 'CLI arguments to pass to CIVET_Processing_Pipeline')
+        
 
     def run(self, options):
         """
@@ -139,11 +150,16 @@ class Civet(ChrisApp):
         print(Gstr_title)
         print('Version: %s' % self.get_version())
 
+        folders = '-sourcedir ' + options.inputdir
+        folders += ' -targetdir ' + options.outputdir
+        # note: sourcedir must come first
+        os.system(f'{script} {folders} {options.cli_args}')
+
     def show_man_page(self):
         """
         Print the app's man page.
         """
-        print(Gstr_synopsis)
+        os.system(script + ' -help')
 
 
 # ENTRYPOINT
