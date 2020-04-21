@@ -16,7 +16,9 @@ pl-civet
 Abstract
 --------
 
-CIVET is an image processing pipeline for fully automated volumetric, corticometric, and morphometric analysis of human brain imaging data (MRI).
+CIVET is an image processing pipeline for fully automated
+volumetric, corticometric, and morphometric analysis
+of human brain imaging data (MRI).
 
 
 Synopsis
@@ -36,7 +38,8 @@ Synopsis
 Description
 -----------
 
-``civet_wrapper.py`` is a ChRIS-based application that...
+``civet_wrapper.py`` is a ChRIS-based application that
+runs the CIVET MRI processing pipeline.
 
 Agruments
 ---------
@@ -55,34 +58,11 @@ Agruments
     [--meta]
     If specified, print plugin meta data.
 
-    --args <CLI_ARGS>
-    CLI arguments to pass to CIVET_Processing_Pipeline
 
 Run
 ----
 
-This ``plugin`` can be run in two modes: natively as a python package or as a containerized docker image.
-
-Using PyPI
-~~~~~~~~~~
-
-To run from PyPI, simply do a 
-
-.. code:: bash
-
-    pip install civet_wrapper
-
-and run with
-
-.. code:: bash
-
-    civet_wrapper.py --man /tmp /tmp
-
-to get inline help. The app should also understand being called with only two positional arguments
-
-.. code:: bash
-
-    civet_wrapper.py /some/input/directory /destination/directory
+This ``plugin`` can only run as a containerized docker image.
 
 
 Using ``docker run``
@@ -95,7 +75,7 @@ Now, prefix all calls with
 .. code:: bash
 
     docker run --rm -v $(pwd)/out:/outgoing                             \
-            fnndsc/pl-civet_wrapper civet_wrapper.py                        \
+            fnndsc/pl-civet_wrapper civet_wrapper.py                    \
 
 Thus, getting inline help is:
 
@@ -103,7 +83,7 @@ Thus, getting inline help is:
 
     mkdir in out && chmod 777 out
     docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing      \
-            fnndsc/pl-civet_wrapper civet_wrapper.py                        \
+            fnndsc/pl-civet_wrapper civet_wrapper.py                    \
             --man                                                       \
             /incoming /outgoing
 
@@ -112,16 +92,13 @@ Examples
 
 .. code:: bash
 
-    python civet_wrapper.py --args "-N3-distance 200 -lsq12 -resample-surfaces -thickness tlaplace:tfs:tlink 30:20 -VBM -combine-surface -spawn -run 00100" source/  output/
+    python civet_wrapper.py -N3-distance 200 -lsq12 -resample-surfaces -thickness tlaplace:tfs:tlink 30:20 -VBM -combine-surface -spawn -run 00100 source/  output/
 
 Development
 -----------
 
 .. code:: bash
 
+    docker build -t pl-civet $PWD
+    # if you are on the BCH network, you need to configure the proxy
     docker build -t pl-civet --build-arg http_proxy=http://proxy.tch.harvard.edu:3128 $PWD
-
-
-
-
-

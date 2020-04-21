@@ -42,12 +42,6 @@ Gstr_title = """
 
 Gstr_synopsis = """
 
-(Edit this in-line help for app specifics. At a minimum, the 
-flags below are supported -- in the case of DS apps, both
-positional arguments <inputDir> and <outputDir>; for FS apps
-only <outputDir> -- and similarly for <in> <out> directories
-where necessary.)
-
     NAME
 
        civet_wrapper.py 
@@ -61,7 +55,6 @@ where necessary.)
             [--meta]                                                    \\
             [--savejson <DIR>]                                          \\
             [-v <level>] [--verbosity <level>]                          \\
-            --args <CLI_ARGS>                                           \\
             [--version]                                                 \\
             <inputDir>                                                  \\
             <outputDir> 
@@ -69,14 +62,21 @@ where necessary.)
     BRIEF EXAMPLE
 
         * Bare bones execution
-        
+
             mkdir input
             cp t1.mnc input/00100_t1.mnc
-            python civet_wrapper.py -N3-distance 200 -lsq12 -resample-surfaces -thickness tlaplace:tfs:tlink 30:20 -VBM -combine-surface -spawn -run 00100 source/  output/
+            python civet_wrapper.py -N3-distance 200 -lsq12              \\
+                  -resample-surfaces -thickness tlaplace:tfs:tlink 30:20 \\
+                  -VBM -combine-surface -spawn -run 00100                \\
+                  input/  output/
 
     DESCRIPTION
 
-        `civet_wrapper.py` ...
+        `civet_wrapper.py`
+        
+        A dumb Python wrapper for CIVET to work as a ChRIS plugin.
+        `civet_wrapper.py` passes its CLI arguments to `CIVET_Processing_Pipeline`.
+        Please scroll down to the next section for usage about CIVET itself.
 
     ARGS
 
@@ -100,21 +100,20 @@ where necessary.)
         
         [--version]
         If specified, print version number and exit. 
-
 """
 
 script = '/opt/CIVET/Linux-x86_64/CIVET-2.1.1/CIVET_Processing_Pipeline'
 
 class Civet(ChrisApp):
     """
-    CIVET is an image processing pipeline for fully automated volumetric, corticometric, and morphometric analysis of human brain imaging data (MRI)..
+    CIVET is an image processing pipeline for fully automated volumetric, corticometric, and morphometric analysis of human brain imaging data (MRI).
     """
     AUTHORS                 = 'Jennings Zhang (Jennings.Zhang@childrens.harvard.edu)'
     SELFPATH                = os.path.dirname(os.path.abspath(__file__))
     SELFEXEC                = os.path.basename(__file__)
     EXECSHELL               = 'python3'
     TITLE                   = 'CIVET Pipeline'
-    CATEGORY                = ''
+    CATEGORY                = 'MRI Processing'
     TYPE                    = 'ds'
     DESCRIPTION             = 'CIVET is an image processing pipeline for fully automated volumetric, corticometric, and morphometric analysis of human brain imaging data (MRI).'
     DOCUMENTATION           = 'http://www.bic.mni.mcgill.ca/ServicesSoftware/CIVET'
@@ -142,7 +141,8 @@ class Civet(ChrisApp):
     # flag. Note also that all file paths are relative to the system specified
     # output directory.
     OUTPUT_META_DICT = {}
-    
+
+
     # keep track of all the CIVET-specific options
     civet_options = []
     
@@ -345,13 +345,7 @@ class Civet(ChrisApp):
             help = 'opposite of -reset-running')        
         
 
-    def run(self, options):
-        """
-        Define the code to be run by this plugin app.
-        """
-        print(Gstr_title)
-        print('Version: %s' % self.get_version())
-
+    def assemble_cli(self, options):
         # note: sourcedir must come first
         args_dict = vars(options)
         args_dict['-sourcedir'] = options.inputdir
@@ -367,16 +361,32 @@ class Civet(ChrisApp):
                 cli_string.append(option)
             else:
                 cli_string.append(f'{option} {arg}')
-                
-        print(f'{script} {" ".join(cli_string)}')
-        # os.system(f'{script} {folders} lmao you did it')
+        return ' '.join(cli_string)
+
+    def run(self, options):
+        """
+        Define the code to be run by this plugin app.
+        """
+        print(Gstr_title)
+        print('Version: %s' % self.get_version())
+        print(f'{script} {self.assemble_cli(options)}')
+
 
     def show_man_page(self):
         """
         Print the app's man page.
         """
-        #os.system(script + ' -help')
         print(Gstr_synopsis)
+        print("""
++---------------------------------------------------------------+
+|                                                               |
+|                         CIVET Options                         |
+|                                                               |
++---------------------------------------------------------------+
+        """, flush=True)
+        os.system(script + ' -help')
+        print('end of help')
+
 
 
 # ENTRYPOINT
