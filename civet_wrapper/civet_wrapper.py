@@ -29,6 +29,8 @@ sys.path.append(os.path.dirname(__file__))
 # import the Chris app superclass
 from chrisapp.base import ChrisApp
 
+from glob import glob
+from tempfile import NamedTemporaryFile
 
 Gstr_title = """
  _____ _____ _   _ _____ _____ 
@@ -77,6 +79,10 @@ Gstr_synopsis = """
         A dumb Python wrapper for CIVET to work as a ChRIS plugin.
         `civet_wrapper.py` passes its CLI arguments to `CIVET_Processing_Pipeline`.
         Please scroll down to the next section for usage about CIVET itself.
+        
+        Limitations: scan id cannot be passed inline.
+                     If -idfile is not specified, then
+                     one is created with all *_t1.mnc.
 
     ARGS
 
@@ -354,6 +360,22 @@ class Civet(ChrisApp):
         args_dict['-sourcedir'] = options.inputdir
         args_dict['-targetdir'] = options.outputdir
         
+        # create an id-file if one is not provided
+        if not args_dict['-id-file']:
+            self.civet_options.append('-id-file')
+            with NamedTemporaryFile('w', encoding='utf-8', delete=False) as tmp:
+                args_dict['-id-file'] = tmp.name
+                scan_files = os.path.join(options.inputdir, '*_t1.mnc')
+                for scan_id in glob(scan_files):
+                    scan_id = os.path.basename(scan_id)
+                    scan_id = scan_id[:-len('_t1.mnc')]
+                    tmp.write(scan_id)
+        
+        # ChRIS does not support positional arguments
+        # self.add_argument requires dest
+        # KeyError: "'dest' option required."
+        # however specufiying dest does not make sense for positional arguments
+        # ValueError: dest supplied twice for positional argument
         cli_string = []
         for option in self.civet_options:
             arg = args_dict[option]
@@ -366,6 +388,8 @@ class Civet(ChrisApp):
                 if isinstance(arg, list):
                     arg = ' '.join(arg)
                 cli_string.append(f'{option} {arg}')
+        
+
         return ' '.join(cli_string)
 
     def run(self, options):
@@ -390,7 +414,6 @@ class Civet(ChrisApp):
 +---------------------------------------------------------------+
         """, flush=True)
         os.system(script + ' -help')
-        print('end of help')
 
 
 # ENTRYPOINT
