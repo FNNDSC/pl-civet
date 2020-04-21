@@ -373,8 +373,8 @@ class Civet(ChrisApp):
         Define the code to be run by this plugin app.
         """
         print(Gstr_title)
-        print('Version: %s' % self.get_version())
-        print(f'{script} {self.assemble_cli(options)}')
+        print('Version: %s' % self.get_version(), flush=True)
+        os.system(f'{script} {self.assemble_cli(options)}')
 
 
     def show_man_page(self):
