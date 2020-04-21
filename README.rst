@@ -1,14 +1,14 @@
 pl-civet
 ================================
 
-.. image:: https://badge.fury.io/py/civet_wrapper.svg
-    :target: https://badge.fury.io/py/civet_wrapper
+.. image:: https://badge.fury.io/py/pl-civet.svg
+    :target: https://badge.fury.io/py/pl-civet
 
-.. image:: https://travis-ci.org/FNNDSC/civet_wrapper.svg?branch=master
-    :target: https://travis-ci.org/FNNDSC/civet_wrapper
+.. image:: https://travis-ci.org/FNNDSC/pl-civet.svg?branch=master
+    :target: https://travis-ci.org/FNNDSC/pl-civet
 
 .. image:: https://img.shields.io/badge/python-3.5%2B-blue.svg
-    :target: https://badge.fury.io/py/pl-civet_wrapper
+    :target: https://badge.fury.io/py/pl-civet
 
 .. contents:: Table of Contents
 
@@ -75,7 +75,7 @@ Now, prefix all calls with
 .. code:: bash
 
     docker run --rm -v $(pwd)/out:/outgoing                             \
-            fnndsc/pl-civet_wrapper civet_wrapper.py                    \
+            fnndsc/pl-civet:2.1.1 civet_wrapper.py                    \
 
 Thus, getting inline help is:
 
@@ -83,7 +83,7 @@ Thus, getting inline help is:
 
     mkdir in out && chmod 777 out
     docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing      \
-            fnndsc/pl-civet_wrapper civet_wrapper.py                    \
+            fnndsc/pl-civet:2.1.1 civet_wrapper.py                    \
             --man                                                       \
             /incoming /outgoing
 
@@ -92,7 +92,7 @@ Examples
 
 .. code:: bash
 
-    python civet_wrapper.py -N3-distance 200 -lsq12 -resample-surfaces -thickness tlaplace:tfs:tlink 30:20 -VBM -combine-surface -spawn -run 00100 source/  output/
+    docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing fnndsc/pl-civet:2.1.1 civet_wrapper.py -N3-distance 200 -lsq12 -resample-surfaces -thickness tlaplace:tfs:tlink 30:20 -VBM -combine-surface -spawn -run 00100 /incoming /outgoing
 
 Development
 -----------
