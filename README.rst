@@ -20,6 +20,7 @@ CIVET is an image processing pipeline for fully automated
 volumetric, corticometric, and morphometric analysis
 of human brain imaging data (MRI).
 
+http://www.bic.mni.mcgill.ca/ServicesSoftware/CIVET-2-1-0-Introduction
 
 Synopsis
 --------
