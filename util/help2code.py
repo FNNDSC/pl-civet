@@ -29,6 +29,7 @@ edge_cases = {
         '-thickness': "nargs=2, metavar='T:T:T N:N'"
 }
 
+
 def fix_quote(string):
     return "\\'".join(string.split("'"))
 

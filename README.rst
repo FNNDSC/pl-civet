@@ -26,7 +26,7 @@ Synopsis
 
 .. code::
 
-    python civet_wrapper.py                                           \
+    python civet_wrapper.py                                         \
         [-v <level>] [--verbosity <level>]                          \
         [--version]                                                 \
         [--man]                                                     \
@@ -74,7 +74,7 @@ Now, prefix all calls with
 
 .. code:: bash
 
-    docker run --rm -v $(pwd)/out:/outgoing                             \
+    docker run --rm -v $(pwd)/out:/outgoing                           \
             fnndsc/pl-civet:2.1.1 civet_wrapper.py                    \
 
 Thus, getting inline help is:
@@ -82,9 +82,9 @@ Thus, getting inline help is:
 .. code:: bash
 
     mkdir in out && chmod 777 out
-    docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing      \
+    docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing    \
             fnndsc/pl-civet:2.1.1 civet_wrapper.py                    \
-            --man                                                       \
+            --man                                                     \
             /incoming /outgoing
 
 Examples
@@ -99,6 +99,6 @@ Development
 
 .. code:: bash
 
-    docker build -t pl-civet $PWD
+    docker build -t fnndsc/pl-civet:2.1.1 $PWD
     # if you are on the BCH network, you need to configure the proxy
-    docker build -t pl-civet --build-arg http_proxy=http://proxy.tch.harvard.edu:3128 $PWD
+    docker build -t fnndsc/pl-civet:2.1.1 --build-arg http_proxy=http://proxy.tch.harvard.edu:3128 $PWD
