@@ -22,7 +22,12 @@ for line in sys.stdin:
 
 
 flag = ''
+metavar = ''
 help_string = []
+
+edge_cases = {
+        '-thickness': "nargs=2, metavar='T:T:T N:N'"
+}
 
 def fix_quote(string):
     return "\\'".join(string.split("'"))
@@ -66,6 +71,12 @@ for line in sys.stdin:
         metavar_end = line.index('>')
         metavar = line[flag_end+2:metavar_end]
         flag_end = metavar_end + 1
+    else:
+        metavar = ''
+    
+    if flag in edge_cases:
+        print(f"self.add_argument_c('{flag}',\n    {edge_cases[flag]}", end='')
+    elif metavar:
         print(f"self.add_argument_c('{flag}', metavar='{metavar}'", end='')
     else:
         print(f"self.add_argless('{flag}'", end='')

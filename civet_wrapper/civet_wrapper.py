@@ -162,7 +162,9 @@ class Civet(ChrisApp):
                     optional     = optional,
                     metavar      = metavar,
                     *args, **kwargs)
-        self.civet_options.append(flag)
+        # don't repeat these options
+        if flag not in ['-sourcedir', '-targetdir']:
+            self.civet_options.append(flag)
 
     def add_argless(self, flag, help):
         """
@@ -275,7 +277,8 @@ class Civet(ChrisApp):
             help = 'mask hippocampus and amygdala for surface extraction if model supports it [default]')
         self.add_argless('-no-mask-hippocampus',
             help = 'opposite of -mask-hippocampus')
-        self.add_argless('-thickness',
+        self.add_argument_c('-thickness',
+            nargs=2, metavar='T:T:T N:N',
             help = 'compute cortical thickness and blur [tlink][:tlaplace][:tfs] [fwhm1][:fwhm2]:...[:fwhmN] kernel sizes in mm [default: tlink 30]')
         self.add_argless('-resample-surfaces',
             help = 'resample cortical surfaces')
@@ -360,6 +363,8 @@ class Civet(ChrisApp):
             if arg == True:
                 cli_string.append(option)
             else:
+                if isinstance(arg, list):
+                    arg = ' '.join(arg)
                 cli_string.append(f'{option} {arg}')
         return ' '.join(cli_string)
 
@@ -386,7 +391,6 @@ class Civet(ChrisApp):
         """, flush=True)
         os.system(script + ' -help')
         print('end of help')
-
 
 
 # ENTRYPOINT
