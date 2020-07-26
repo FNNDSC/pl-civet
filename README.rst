@@ -59,6 +59,16 @@ Agruments
     [--meta]
     If specified, print plugin meta data.
 
+Input Files
+~~~~~~~~~~~
+
+If ``-id-file`` is not given, then ``civet_wrapper.py`` will attempt to
+locate all your input files in the specified input directory.
+*ChRIS* does not support positional arguments (besides *inputDir* and *outputDir*).
+This is different from running the ``CIVET_Processing_Pipeline`` directly, where
+you are able to give subject IDs (input file prefixes) as positional arguments.
+
+tl;dr for inputs ``incoming/*_t1.mnc``, don't specify file names via command line.
 
 Run
 ----
@@ -93,7 +103,7 @@ Examples
 
 .. code:: bash
 
-    docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing fnndsc/pl-civet:2.1.1 civet_wrapper.py -N3-distance 200 -lsq12 -resample-surfaces -thickness tlaplace:tfs:tlink 30:20 -VBM -combine-surface -spawn -run 00100 /incoming /outgoing
+    docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing fnndsc/pl-civet:2.1.1 civet_wrapper.py -N3-distance 200 -lsq12 -resample-surfaces -thickness tlaplace:tfs:tlink 30:20 -VBM -combine-surface -spawn -run /incoming /outgoing
 
 Development
 -----------
@@ -103,3 +113,6 @@ Development
     docker build -t fnndsc/pl-civet:2.1.1 $PWD
     # if you are on the BCH network, you need to configure the proxy
     docker build -t fnndsc/pl-civet:2.1.1 --build-arg http_proxy=http://proxy.tch.harvard.edu:3128 $PWD
+
+To learn about cross-platform and multi-architecture builds, see
+https://github.com/FNNDSC/ubuntu-python3/blob/master/README.md#build

@@ -21,18 +21,14 @@
 #   docker run -ti -e HOST_IP=$(ip route | grep -v docker | awk '{if(NF==11) print $9}') --entrypoint /bin/bash local/pl-civet
 #
 
-
-
 FROM fnndsc/ubuntu-python3:latest
 
-
 # install CIVET-2.1.1 binaries
-RUN ["mkdir", "-p", "/opt/CIVET/Linux-x86_64"]
-COPY --from=mcin/civet:2.1.1 /opt/CIVET/Linux-x86_64/ /opt/CIVET/Linux-x86_64/
+COPY --from=fnndsc/civet:2.1.1 /opt/CIVET/dist/ /opt/CIVET/dist/
 
 # init.sh environment variables, should be equivalent to
 # printf "%s\n\n" "source /opt/CIVET/Linux-x86_64/init.sh" >> ~/.bashrc
-ENV MNIBASEPATH=/opt/CIVET/Linux-x86_64 CIVET=CIVET-2.1.1
+ENV MNIBASEPATH=/opt/CIVET/dist CIVET=CIVET-2.1.1
 ENV PATH=$MNIBASEPATH/$CIVET:$MNIBASEPATH/$CIVET/progs:$MNIBASEPATH/bin:$PATH \
     LD_LIBRARY_PATH=$MNIBASEPATH/lib \
     MNI_DATAPATH=$MNIBASEPATH/share \
@@ -45,12 +41,11 @@ ENV PATH=$MNIBASEPATH/$CIVET:$MNIBASEPATH/$CIVET/progs:$MNIBASEPATH/bin:$PATH \
     CIVET_JOB_SCHEDULER=DEFAULT
 
 ENV APPROOT="/usr/src/civet_wrapper"
-COPY ["civet_wrapper", "${APPROOT}"]
-COPY ["requirements.txt", "${APPROOT}"]
+COPY ["civet_wrapper", "requirements.txt", "${APPROOT}/"]
 
 WORKDIR $APPROOT
 
-RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 CMD ["civet_wrapper.py", "--help"]
+

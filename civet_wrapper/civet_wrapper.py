@@ -69,7 +69,7 @@ Gstr_synopsis = """
             cp t1.mnc input/00100_t1.mnc
             python civet_wrapper.py -N3-distance 200 -lsq12              \\
                   -resample-surfaces -thickness tlaplace:tfs:tlink 30:20 \\
-                  -VBM -combine-surface -spawn -run 00100                \\
+                  -VBM -combine-surface -spawn -run                      \\
                   input/  output/
 
     DESCRIPTION
@@ -108,7 +108,7 @@ Gstr_synopsis = """
         If specified, print version number and exit. 
 """
 
-script = '/opt/CIVET/Linux-x86_64/CIVET-2.1.1/CIVET_Processing_Pipeline'
+script = os.path.join(os.environ['MNIBASEPATH'], os.environ['CIVET'], 'CIVET_Processing_Pipeline')
 
 class Civet(ChrisApp):
     """
