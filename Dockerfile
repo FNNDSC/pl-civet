@@ -1,51 +1,8 @@
-# Docker file for civet_wrapper ChRIS plugin app
-#
-# Build with
-#
-#   docker build -t <name> .
-#
-# For example if building a local version, you could do:
-#
-#   docker build -t local/pl-civet .
-#
-# In the case of a proxy (located at 192.168.13.14:3128), do:
-#
-#    docker build --build-arg http_proxy=http://192.168.13.14:3128 --build-arg UID=$UID -t local/pl-civet .
-#
-# To run an interactive shell inside this container, do:
-#
-#   docker run -ti --entrypoint /bin/bash local/pl-civet
-#
-# To pass an env var HOST_IP to container, do:
-#
-#   docker run -ti -e HOST_IP=$(ip route | grep -v docker | awk '{if(NF==11) print $9}') --entrypoint /bin/bash local/pl-civet
-#
+FROM fnndsc/civet:2.1.1
 
-FROM fnndsc/ubuntu-python3:latest
+COPY . /usr/local/src/
 
-# install CIVET-2.1.1 binaries
-COPY --from=fnndsc/civet:2.1.1 /opt/CIVET/dist/ /opt/CIVET/dist/
+RUN apt-get update -qq && apt-get install -qq python3-pip \
+    && pip3 install /usr/local/src
 
-# init.sh environment variables, should be equivalent to
-# printf "%s\n\n" "source /opt/CIVET/Linux-x86_64/init.sh" >> ~/.bashrc
-ENV MNIBASEPATH=/opt/CIVET/dist CIVET=CIVET-2.1.1
-ENV PATH=$MNIBASEPATH/$CIVET:$MNIBASEPATH/$CIVET/progs:$MNIBASEPATH/bin:$PATH \
-    LD_LIBRARY_PATH=$MNIBASEPATH/lib \
-    MNI_DATAPATH=$MNIBASEPATH/share \
-    PERL5LIB=$MNIBASEPATH/perl \
-    R_LIBS=$MNIBASEPATH/R_LIBS \
-    VOLUME_CACHE_THRESHOLD=-1 \
-    BRAINVIEW=$MNIBASEPATH/share/brain-view \
-    MINC_FORCE_V2=1 \
-    MINC_COMPRESS=4 \
-    CIVET_JOB_SCHEDULER=DEFAULT
-
-ENV APPROOT="/usr/src/civet_wrapper"
-COPY ["civet_wrapper", "requirements.txt", "${APPROOT}/"]
-
-WORKDIR $APPROOT
-
-RUN pip install -r requirements.txt
-
-CMD ["civet_wrapper.py", "--help"]
-
+CMD ["civet_wrapper", "--help"]
