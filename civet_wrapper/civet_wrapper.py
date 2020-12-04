@@ -114,10 +114,10 @@ class Civet(CustomArgsApp):
     corticometric, and morphometric analysis of human brain imaging data (MRI).
     """
     AUTHORS                 = 'Jennings Zhang <Jennings.Zhang@childrens.harvard.edu>'
-    SELFPATH                = os.path.dirname(os.path.abspath(__file__))
-    SELFEXEC                = os.path.basename(__file__)
+    SELFPATH                = '/usr/local/bin'
+    SELFEXEC                = 'civet_wrapper'
     EXECSHELL               = 'python3'
-    TITLE                   = 'CIVET Pipeline'
+    TITLE                   = 'CIVET Human Brain-Imaging Pipeline'
     CATEGORY                = 'MRI Processing'
     TYPE                    = 'ds'
     DESCRIPTION             = 'CIVET is an image processing pipeline for fully automated volumetric,' \
@@ -160,7 +160,7 @@ class Civet(CustomArgsApp):
         # these need to appear first in the command line call to CIVET
         self.civet_options.append('-sourcedir')
         self.civet_options.append('-targetdir')
-        
+
         add_civet_arguments(self)
 
     def assemble_cli(self, options):

@@ -6,7 +6,7 @@ with open(path.join(path.abspath(path.dirname(__file__)), 'README.rst')) as f:
 
 setup(
     name             = 'civet_wrapper',
-    version          = '2.1.1.2',
+    version          = '2.1.1.3',
     description      = 'CIVET is an image processing pipeline for fully automated volumetric, corticometric, and morphometric analysis of human brain imaging data (MRI).',
     long_description = readme,
     author           = 'Jennings Zhang',

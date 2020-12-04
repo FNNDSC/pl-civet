@@ -1,15 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Apr 20 18:26:28 2020
-
 @author: Jennings Zhang <Jennings.Zhang@childrens.harvard.edu>
 
 Purpose: parse output of `CIVET_Processing_Pipeline -help` to generate
          Python argparse-like code for pl-civet, a Python wrapper for CIVET
 
 Usage:
-       CIVET_Processing_Pipeline -help | python help2code.py
+        CIVET_Processing_Pipeline -help | util/help2code.py >> civet_wrapper/arguments.py
+
+    That happens in Dockerfile, so
+
+        docker build -t fnndsc/pl-civet .
+
+    Verify
+
+        docker run --rm --entrypoint /bin/cat fnndsc/pl-civet /usr/local/lib/python3.6/dist-packages/civet_wrapper/arguments.py
+        docker run --rm fnndsc/pl-civet civet_wrapper --help
 """
 
 import sys
@@ -20,13 +27,18 @@ for line in sys.stdin:
     else:
         continue
 
+indent = '    '
+print('def add_civet_arguments(p: CustomArgsApp):')
 
+# global state
 flag = ''
 metavar = ''
 help_string = []
 
+# denote which flags are formatted too weirdly for automatic processing,
+# and manually define the code for it.
 edge_cases = {
-        '-thickness': "nargs=2, metavar='T:T:T N:N'"
+        '-thickness': indent + "nargs=2, metavar='T:T:T N:N'"
 }
 
 
@@ -39,7 +51,7 @@ def finish_help():
     if flag:
         help_string = map(fix_quote, help_string)
         help_string = ' '.join(help_string)
-        print(f",\n    help = '{help_string}')")
+        print(f",\n{indent}{indent}help = '{help_string}')")
         flag = ''
         help_string = []
 
@@ -55,7 +67,7 @@ for line in sys.stdin:
 
     if line.startswith('-- '):
         finish_help()
-        print('# ' + line)
+        print(indent + '# ' + line)
         continue
 
     if line.startswith('   -'): # found a new option
@@ -76,11 +88,12 @@ for line in sys.stdin:
         metavar = ''
     
     if flag in edge_cases:
-        print(f"self.add_argument_c('{flag}',\n    {edge_cases[flag]}", end='')
+        code = f"p.add_argument_c('{flag}',\n    {edge_cases[flag]}"
     elif metavar:
-        print(f"self.add_argument_c('{flag}', metavar='{metavar}'", end='')
+        code = f"p.add_argument_c('{flag}', metavar='{metavar}'"
     else:
-        print(f"self.add_argless('{flag}'", end='')
+        code = f"p.add_argless('{flag}'"
+    print(indent + code, end='')
 
     line = line[flag_end:].lstrip()
     if line:
