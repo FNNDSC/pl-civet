@@ -27,12 +27,11 @@ Synopsis
 
 .. code::
 
-    python civet_wrapper.py                                         \
+    civet_wrapper                                                   \
         [-v <level>] [--verbosity <level>]                          \
         [--version]                                                 \
         [--man]                                                     \
         [--meta]                                                    \
-        --args <CLI_ARGS>                                           \
         <inputDir>
         <outputDir> 
 
@@ -85,34 +84,34 @@ Now, prefix all calls with
 
 .. code:: bash
 
-    docker run --rm -v $(pwd)/out:/outgoing                           \
-            fnndsc/pl-civet:2.1.1 civet_wrapper.py                    \
+    docker run --rm -v $PWD/in:incoming -v $PWD/out:/outgoing fnndsc/pl-civet:2.1.1 civet_wrapper
 
 Thus, getting inline help is:
 
 .. code:: bash
 
-    mkdir in out && chmod 777 out
-    docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing    \
-            fnndsc/pl-civet:2.1.1 civet_wrapper.py                    \
-            --man                                                     \
-            /incoming /outgoing
+    docker run --rm fnndsc/pl-civet:2.1.1 civet_wrapper --man
 
 Examples
 --------
 
 .. code:: bash
 
-    docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing fnndsc/pl-civet:2.1.1 civet_wrapper.py -N3-distance 200 -lsq12 -resample-surfaces -thickness tlaplace:tfs:tlink 30:20 -VBM -combine-surface -spawn -run /incoming /outgoing
+    docker run --rm -v $PWD/in:/incoming -v $PWD/out:/outgoing fnndsc/pl-civet:2.1.1 civet_wrapper -N3-distance 200 -lsq12 -resample-surfaces -thickness tlaplace:tfs:tlink 30:20 -VBM -combine-surface -spawn -run /incoming /outgoing
 
 Development
 -----------
 
 .. code:: bash
 
-    docker build -t fnndsc/pl-civet:2.1.1 $PWD
-    # if you are on the BCH network, you need to configure the proxy
-    docker build -t fnndsc/pl-civet:2.1.1 --build-arg http_proxy=http://proxy.tch.harvard.edu:3128 $PWD
+    docker build -t fnndsc/pl-civet $PWD
 
 To learn about cross-platform and multi-architecture builds, see
 https://github.com/FNNDSC/ubuntu-python3/blob/master/README.md#build
+
+Testing
+=======
+
+.. code:: bash
+
+    docker run --rm -w /usr/local/src --entrypoint /usr/bin/python3 fnndsc/pl-civet -m unittest
