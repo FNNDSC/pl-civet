@@ -104,7 +104,7 @@ Development
 
 .. code:: bash
 
-    docker build -t fnndsc/pl-civet $PWD
+    docker build -t fnndsc/pl-civet .
 
 To learn about cross-platform and multi-architecture builds, see
 https://github.com/FNNDSC/ubuntu-python3/blob/master/README.md#build

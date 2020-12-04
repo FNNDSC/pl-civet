@@ -1,0 +1,13 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: build
+        run: docker build -t fnndsc/pl-civet .
+      - name: unittest
+        run: docker run --rm -w /usr/local/src --entrypoint /usr/bin/python3 fnndsc/pl-civet -m unittest
