@@ -1,8 +1,14 @@
 pl-civet
 ================================
 
+.. |br| raw:: html
+
+   <br />
+
 .. image:: https://github.com/FNNDSC/pl-civet/workflows/CI/badge.svg
     :target: https://github.com/FNNDSC/pl-civet/actions
+
+|br|
 
 .. image:: https://raw.githubusercontent.com/FNNDSC/cookiecutter-chrisapp/master/doc/assets/badge/light.png
     :target: https://chrisstore.co/plugin/2
