@@ -1,14 +1,12 @@
 pl-civet
 ================================
 
-.. image:: https://badge.fury.io/py/pl-civet.svg
-    :target: https://badge.fury.io/py/pl-civet
+.. image:: https://github.com/FNNDSC/pl-civet/workflows/CI/badge.svg
+    :target: https://github.com/FNNDSC/pl-civet/actions
 
-.. image:: https://travis-ci.org/FNNDSC/pl-civet.svg?branch=master
-    :target: https://travis-ci.org/FNNDSC/pl-civet
+.. image:: https://raw.githubusercontent.com/FNNDSC/cookiecutter-chrisapp/master/doc/assets/badge/light.png
+    :target: https://chrisstore.co/plugin/2
 
-.. image:: https://img.shields.io/badge/python-3.5%2B-blue.svg
-    :target: https://badge.fury.io/py/pl-civet
 
 .. contents:: Table of Contents
 
@@ -21,19 +19,6 @@ volumetric, corticometric, and morphometric analysis
 of human brain imaging data (MRI).
 
 http://www.bic.mni.mcgill.ca/ServicesSoftware/CIVET-2-1-0-Introduction
-
-Synopsis
---------
-
-.. code::
-
-    civet_wrapper                                                   \
-        [-v <level>] [--verbosity <level>]                          \
-        [--version]                                                 \
-        [--man]                                                     \
-        [--meta]                                                    \
-        <inputDir>
-        <outputDir> 
 
 Description
 -----------
@@ -69,31 +54,8 @@ you are able to give subject IDs (input file prefixes) as positional arguments.
 
 tl;dr for inputs ``incoming/*_t1.mnc``, don't specify file names via command line.
 
-Run
-----
-
-This ``plugin`` can only run as a containerized docker image.
-
-
-Using ``docker run``
-~~~~~~~~~~~~~~~~~~~~
-
-To run using ``docker``, be sure to assign an "input" directory to ``/incoming`` and an output directory to ``/outgoing``. *Make sure that the* ``$(pwd)/out`` *directory is world writable!*
-
-Now, prefix all calls with 
-
-.. code:: bash
-
-    docker run --rm -v $PWD/in:incoming -v $PWD/out:/outgoing fnndsc/pl-civet:2.1.1 civet_wrapper
-
-Thus, getting inline help is:
-
-.. code:: bash
-
-    docker run --rm fnndsc/pl-civet:2.1.1 civet_wrapper --man
-
-Examples
---------
+Example
+-------
 
 .. code:: bash
 
@@ -107,7 +69,7 @@ Development
     docker build -t fnndsc/pl-civet .
 
 To learn about cross-platform and multi-architecture builds, see
-https://github.com/FNNDSC/ubuntu-python3/blob/master/README.md#build
+https://github.com/FNNDSC/cookiecutter-chrisapp/wiki/Multi-Architectural-Images#manifest-list
 
 Testing
 =======
