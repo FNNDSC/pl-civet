@@ -57,6 +57,8 @@ locate all your input files in the specified input directory.
 *ChRIS* does not support positional arguments (besides *inputDir* and *outputDir*).
 This is different from running the ``CIVET_Processing_Pipeline`` directly, where
 you are able to give subject IDs (input file prefixes) as positional arguments.
+When multiple input files are present, they are processed sequentially by CIVET.
+Input file names must not contain whitespace nor commas.
 
 tl;dr for inputs ``incoming/*_t1.mnc``, don't specify file names via command line.
 

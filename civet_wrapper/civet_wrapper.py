@@ -175,10 +175,15 @@ class Civet(CustomArgsApp):
             with NamedTemporaryFile('w', encoding='utf-8', delete=False) as tmp:
                 args_dict['-id-file'] = tmp.name
                 scan_files = os.path.join(options.inputdir, '*_t1.mnc')
+                is_first = True
                 for scan_id in glob(scan_files):
                     scan_id = os.path.basename(scan_id)
                     scan_id = scan_id[:-len('_t1.mnc')]
+
+                    if not is_first:
+                        tmp.write(' ')
                     tmp.write(scan_id)
+                    is_first = False
         
         # ChRIS does not support positional arguments
         # self.add_argument requires dest
